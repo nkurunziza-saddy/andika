@@ -1,0 +1,11 @@
+{
+  "extends": "@andika/typescript-config/base.json",
+  "compilerOptions": {
+    "preserveWatchOutput": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "noEmit": false
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

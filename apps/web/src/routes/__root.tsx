@@ -9,7 +9,7 @@ import {
   useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import "../index.css";
+import "../styles/index.css";
 import { ThemeProvider } from "next-themes";
 import {
   SidebarInset,
@@ -19,7 +19,6 @@ import {
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { Separator } from "@/components/ui/separator";
 import Loading from "@/components/loading";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 export interface RouterAppContext {
   trpc: typeof trpc;
@@ -64,20 +63,26 @@ function RootComponent() {
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>
-            <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+            <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator
                 orientation="vertical"
                 className="mr-2 data-[orientation=vertical]:h-4"
               />
-              Recents
+              <h4 className="text-sm font-medium">Recents</h4>
               <div className="ml-auto flex items-center space-x-2">
-                <Button size={"xs"}>Document</Button>
-                <Button size={"xs"}>Template</Button>
-                <Button size={"xs"}>Note</Button>
+                <Button variant={"outline"} size={"xs"}>
+                  Document
+                </Button>
+                <Button variant={"outline"} size={"xs"}>
+                  Template
+                </Button>
+                <Button variant={"outline"} size={"xs"}>
+                  Note
+                </Button>
               </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4">
+            <div className="flex flex-1 flex-col gap-4">
               {isFetching ? <Loading /> : <Outlet />}
             </div>
           </SidebarInset>

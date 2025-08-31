@@ -158,8 +158,8 @@ export function ChapterSidebar({
         className
       )}
     >
-      <div className="border-b border-sidebar-border">
-        <div className="px-2 flex items-center justify-between mb-4">
+      <div className="border-b h-10 border-sidebar-border">
+        <div className="px-2 flex items-center justify-between my-auto h-full">
           <div className="flex items-center gap-2">
             <h2 className="text-sm font-medium">Chapters</h2>
           </div>

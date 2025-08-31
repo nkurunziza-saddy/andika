@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { RichTextEditor } from "@/components/rich-text-editor";
 import { RotateCcw, Eye } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
+import { SimpleEditor } from "./text-editor/tiptap-templates/simple/simple-editor";
 
 interface Version {
   id: string;
@@ -53,8 +53,8 @@ export function VersionHistory({
         className
       )}
     >
-      <div className="border-b border-sidebar-border">
-        <div className="px-2 flex items-center justify-between mb-4">
+      <div className="border-b h-10 border-sidebar-border">
+        <div className="px-2 h-full my-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <h3 className="font-medium text-sm">Version History</h3>
           </div>
@@ -164,12 +164,7 @@ export function VersionHistory({
                             </DialogTitle>
                           </DialogHeader>
                           <ScrollArea className="max-h-[60vh]">
-                            <RichTextEditor
-                              content={version.content}
-                              onChange={() => {}}
-                              editable={false}
-                              className="border-0"
-                            />
+                            <SimpleEditor />
                           </ScrollArea>
                         </DialogContent>
                       </Dialog>

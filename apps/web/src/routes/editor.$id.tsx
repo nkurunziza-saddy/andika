@@ -2,20 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { RichTextEditor } from "@/components/rich-text-editor";
 import { ChapterSidebar } from "@/components/chapter-sidebar";
 import { VersionHistory } from "@/components/version-history";
-import {
-  ArrowLeft,
-  FileText,
-  StickyNote,
-  Layout,
-  Clock,
-  User,
-  PanelLeftClose,
-  PanelLeft,
-  History,
-} from "lucide-react";
+import { PanelLeft, History } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SimpleEditor } from "@/components/text-editor/tiptap-templates/simple/simple-editor";

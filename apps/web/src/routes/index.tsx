@@ -10,8 +10,8 @@ export const Route = createFileRoute("/")({
 async function AppPage() {
   console.log(documentsData);
   return (
-    <div className="p-2">
-      <Tabs defaultValue="viewed">
+    <div className="p-6">
+      <Tabs defaultValue="viewed" className="space-y-3">
         <div className="flex items-center">
           <TabsList>
             <TabsTrigger value="viewed">Recently viewed</TabsTrigger>
