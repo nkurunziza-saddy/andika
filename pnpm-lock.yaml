@@ -36,13 +36,13 @@ importers:
         specifier: ^17.2.1
         version: 17.2.1
       drizzle-orm:
-        specifier: ^0.44.2
+        specifier: ^0.44.5
         version: 0.44.5(@types/pg@8.15.5)(kysely@0.28.5)(pg@8.16.3)
       hono:
         specifier: ^4.8.2
         version: 4.9.5
       pg:
-        specifier: ^8.14.1
+        specifier: ^8.16.3
         version: 8.16.3
       zod:
         specifier: ^4.0.2
@@ -55,16 +55,16 @@ importers:
         specifier: ^22.13.11
         version: 22.18.0
       '@types/pg':
-        specifier: ^8.11.11
+        specifier: ^8.15.5
         version: 8.15.5
       drizzle-kit:
-        specifier: ^0.31.2
+        specifier: ^0.31.4
         version: 0.31.4
       tsdown:
         specifier: ^0.14.1
         version: 0.14.2(typescript@5.9.2)
       tsx:
-        specifier: ^4.19.2
+        specifier: ^4.20.5
         version: 4.20.5
       typescript:
         specifier: ^5.8.2
