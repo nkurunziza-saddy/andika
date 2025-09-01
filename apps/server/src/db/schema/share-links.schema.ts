@@ -17,7 +17,7 @@ export const shareLinksTable = pgTable(
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
     token: text("token").notNull().unique(),
-    role: collaboratorRoleEnum("role").notNull().default("viewer"),
+    role: collaboratorRoleEnum("role").notNull().default("VIEWER"),
     isActive: boolean("is_active").default(true),
     expiresAt: timestamp("expires_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })

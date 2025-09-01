@@ -1,17 +1,16 @@
-// documents.ts
 import {
   pgTable,
   text,
   boolean,
   timestamp,
   integer,
-  json,
   index,
   jsonb,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { documentTypeEnum } from "./enums.schema";
 import { usersTable } from "./users.schema";
+import type { DocumentContentInterface } from "@andika/shared";
 
 export const documentsTable = pgTable(
   "documents",
@@ -20,13 +19,25 @@ export const documentsTable = pgTable(
       .primaryKey()
       .default(sql`gen_random_uuid()`),
     title: text("title").notNull().default("Untitled Document"),
-    content: jsonb("content").default({
-      type: "doc",
-      content: [{ type: "paragraph", content: [{ type: "text", text: "" }] }],
-    }),
+    content: jsonb("content")
+      .$type<DocumentContentInterface>()
+      .default({
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "Start writing here...",
+              },
+            ],
+          },
+        ],
+      }),
     documentType: documentTypeEnum("document_type")
       .notNull()
-      .default("document"),
+      .default("DOCUMENT"),
     userId: text("user_id")
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),

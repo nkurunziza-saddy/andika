@@ -1,12 +1,10 @@
-import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Link } from "@tanstack/react-router";
 import { Badge } from "./ui/badge";
-import { Calendar } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import type { DocumentData } from "@/lib/data";
+import type { ApiSelectTypes } from "@andika/shared";
 
-const DocCard = ({ document }: { document: DocumentData }) => {
+const DocCard = ({ document }: { document: ApiSelectTypes["Documents"] }) => {
   return (
     <Card key={document.id} className="group">
       <CardHeader className="pb-0">

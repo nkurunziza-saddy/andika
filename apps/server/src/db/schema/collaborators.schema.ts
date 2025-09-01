@@ -22,7 +22,7 @@ export const collaboratorsTable = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
-    role: collaboratorRoleEnum("role").notNull().default("viewer"),
+    role: collaboratorRoleEnum("role").notNull().default("VIEWER"),
     invitedBy: text("invited_by")
       .notNull()
       .references(() => usersTable.id),

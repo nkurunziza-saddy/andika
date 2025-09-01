@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { documentsTable } from "./documents.schema";
 import { sql } from "drizzle-orm";
+import type { DocumentContentInterface } from "@andika/shared";
 
 export const chaptersTable = pgTable(
   "chapters",
@@ -19,10 +20,22 @@ export const chaptersTable = pgTable(
       .notNull()
       .references(() => documentsTable.id, { onDelete: "cascade" }),
     title: text("title").notNull().default("Untitled Chapter"),
-    content: jsonb("content").default({
-      type: "doc",
-      content: [{ type: "paragraph", content: [{ type: "text", text: "" }] }],
-    }),
+    content: jsonb("content")
+      .$type<DocumentContentInterface>()
+      .default({
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            content: [
+              {
+                type: "text",
+                text: "Start writing here...",
+              },
+            ],
+          },
+        ],
+      }),
     orderIndex: integer("order_index").notNull().default(0),
     wordCount: integer("word_count").default(0),
     createdAt: timestamp("created_at", { withTimezone: true })

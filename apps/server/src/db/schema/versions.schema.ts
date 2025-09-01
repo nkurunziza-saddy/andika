@@ -3,7 +3,6 @@ import {
   text,
   timestamp,
   integer,
-  json,
   index,
   type AnyPgColumn,
   jsonb,
@@ -33,7 +32,7 @@ export const documentVersionsTable = pgTable(
     title: text("title").notNull(),
     content: jsonb("content").notNull(),
     commitMessage: text("commit_message"),
-    versionType: versionTypeEnum("version_type").notNull().default("auto_save"),
+    versionType: versionTypeEnum("version_type").notNull().default("AUTO_SAVE"),
     parentVersionId: text("parent_version_id").references(
       (): AnyPgColumn => documentVersionsTable.id
     ),

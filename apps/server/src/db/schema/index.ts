@@ -6,5 +6,6 @@ export * from "./versions.schema";
 export * from "./collaborators.schema";
 export * from "./comments.schema";
 export * from "./share-links.schema";
+export * from "./auth.schema";
 export * from "./analytics.schema";
 export * from "./relations.schema";

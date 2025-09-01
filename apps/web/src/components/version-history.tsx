@@ -164,7 +164,22 @@ export function VersionHistory({
                             </DialogTitle>
                           </DialogHeader>
                           <ScrollArea className="max-h-[60vh]">
-                            <SimpleEditor />
+                            <SimpleEditor
+                              content={{
+                                type: "doc",
+                                content: [
+                                  {
+                                    type: "paragraph",
+                                    content: [
+                                      {
+                                        type: "text",
+                                        text: "Start writing here...",
+                                      },
+                                    ],
+                                  },
+                                ],
+                              }}
+                            />
                           </ScrollArea>
                         </DialogContent>
                       </Dialog>

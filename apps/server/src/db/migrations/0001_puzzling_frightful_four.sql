@@ -1,0 +1,1 @@
+ALTER TABLE "documents" ALTER COLUMN "content" SET DEFAULT '{"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"Start writing here..."}]}]}'::jsonb;

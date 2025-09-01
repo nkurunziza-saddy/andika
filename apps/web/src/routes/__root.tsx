@@ -7,26 +7,39 @@ import {
   Outlet,
   createRootRouteWithContext,
   useRouterState,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import "../styles/index.css";
 import { ThemeProvider } from "next-themes";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/sidebar/app-sidebar";
-import { Separator } from "@/components/ui/separator";
 import Loading from "@/components/loading";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 export interface RouterAppContext {
   trpc: typeof trpc;
   queryClient: QueryClient;
 }
 
+function RootErrorComponent({ error }: ErrorComponentProps) {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <Card className="max-w-md w-full bg-card rounded-lg border p-6 text-center">
+        <CardHeader>
+          <CardTitle>Something went wrong!</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <pre className="mb-2 text-xs p-2 rounded border-input overflow-auto">
+            {error.message}
+          </pre>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 export const Route = createRootRouteWithContext<RouterAppContext>()({
   component: RootComponent,
+  errorComponent: RootErrorComponent,
   head: () => ({
     meta: [
       {
@@ -60,33 +73,7 @@ function RootComponent() {
         disableTransitionOnChange
         storageKey="andika-ui-theme"
       >
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator
-                orientation="vertical"
-                className="mr-2 data-[orientation=vertical]:h-4"
-              />
-              <h4 className="text-sm font-medium">Recents</h4>
-              <div className="ml-auto flex items-center space-x-2">
-                <Button variant={"outline"} size={"xs"}>
-                  Document
-                </Button>
-                <Button variant={"outline"} size={"xs"}>
-                  Template
-                </Button>
-                <Button variant={"outline"} size={"xs"}>
-                  Note
-                </Button>
-              </div>
-            </header>
-            <div className="flex flex-1 flex-col gap-4">
-              {isFetching ? <Loading /> : <Outlet />}
-            </div>
-          </SidebarInset>
-        </SidebarProvider>
+        <div className="flex-1">{isFetching ? <Loading /> : <Outlet />}</div>
         <Toaster />
       </ThemeProvider>
       <TanStackRouterDevtools position="bottom-left" />

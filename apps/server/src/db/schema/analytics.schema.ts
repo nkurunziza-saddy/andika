@@ -1,12 +1,4 @@
-import {
-  pgTable,
-  text,
-  timestamp,
-  integer,
-  json,
-  index,
-  jsonb,
-} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, index, jsonb } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 import { documentsTable } from "./documents.schema";
 import { usersTable } from "./users.schema";
@@ -23,7 +15,7 @@ export const analyticsTable = pgTable(
     documentId: text("document_id").references(() => documentsTable.id, {
       onDelete: "cascade",
     }),
-    eventType: text("event_type").notNull(), // 'document_created', 'words_written', 'session_time', etc.
+    eventType: text("event_type").notNull(), // 'document_created', 'words_written', 'session_time', ..
     eventData: jsonb("event_data"), // Flexible data storage for different event types
     sessionId: text("session_id"),
     timestamp: timestamp("timestamp", { withTimezone: true })

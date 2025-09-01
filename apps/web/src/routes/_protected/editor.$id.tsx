@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChapterSidebar } from "@/components/chapter-sidebar";
 import { VersionHistory } from "@/components/version-history";
 import { PanelLeft, History } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { SimpleEditor } from "@/components/text-editor/tiptap-templates/simple/simple-editor";
+import { trpc } from "@/utils/trpc";
+import { useQuery } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { authClient } from "@/lib/auth-client";
 
 interface Document {
   id: string;
@@ -35,17 +37,28 @@ interface Chapter {
   updated_at: string;
 }
 
-export const Route = createFileRoute("/new")({
-  component: RouteComponent,
+export const Route = createFileRoute("/_protected/editor/$id")({
+  component: EditorPage,
 });
 
-function RouteComponent() {
+function EditorPage() {
+  const { id } = Route.useParams();
+  const documentId = id as string;
+  const {
+    data: documentQuery,
+    error,
+    isLoading,
+  } = useQuery(trpc.documents.getById.queryOptions(documentId));
   const [document, setDocument] = useState<Document | null>(null);
   const [currentChapter, setCurrentChapter] = useState<Chapter | null>(null);
   const [title, setTitle] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [versionHistoryOpen, setVersionHistoryOpen] = useState(false);
-  const showChapters = document?.document_type === "document" || true;
+  const showChapters = document?.document_type === "document" || false;
+
+  if (isLoading) return <div>Loading...</div>;
+  if (!documentQuery || error) return <div>Error loading document</div>;
+
   return (
     <div className="flex gap-1">
       {showChapters && sidebarOpen && (
@@ -57,7 +70,7 @@ function RouteComponent() {
       )}
 
       <div className="flex-1 flex flex-col">
-        <div className="w-full mx-auto">
+        <div className="w-full min-h-screen mx-auto">
           <div className="h-10 mb-4 border-b border-sidebar-border">
             <div className="flex h-full my-auto items-center gap-4">
               <div className="flex items-center w-full gap-2">
@@ -112,7 +125,7 @@ function RouteComponent() {
             </div>
           </div>
 
-          <SimpleEditor />
+          <SimpleEditor content={documentQuery[0].content} />
 
           <div className="mt-6 flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
@@ -124,7 +137,7 @@ function RouteComponent() {
 
       {versionHistoryOpen && (
         <VersionHistory
-          documentId={"documentId"}
+          documentId={documentId}
           chapterId={currentChapter?.id}
           onRestore={() => {}}
         />

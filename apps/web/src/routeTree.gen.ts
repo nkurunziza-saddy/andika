@@ -10,20 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodosRouteImport } from './routes/todos'
-import { Route as NewRouteImport } from './routes/new'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as EditorIdRouteImport } from './routes/editor.$id'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as ProtectedIndexRouteImport } from './routes/_protected/index'
+import { Route as ProtectedTestRouteImport } from './routes/_protected/test'
+import { Route as ProtectedNewRouteImport } from './routes/_protected/new'
+import { Route as ProtectedEditorIdRouteImport } from './routes/_protected/editor.$id'
 
 const TodosRoute = TodosRouteImport.update({
   id: '/todos',
   path: '/todos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewRoute = NewRouteImport.update({
-  id: '/new',
-  path: '/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -31,69 +27,77 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+const ProtectedRoute = ProtectedRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const ProtectedIndexRoute = ProtectedIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRoute,
 } as any)
-const EditorIdRoute = EditorIdRouteImport.update({
+const ProtectedTestRoute = ProtectedTestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedNewRoute = ProtectedNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedEditorIdRoute = ProtectedEditorIdRouteImport.update({
   id: '/editor/$id',
   path: '/editor/$id',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/new': typeof NewRoute
   '/todos': typeof TodosRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/new': typeof ProtectedNewRoute
+  '/test': typeof ProtectedTestRoute
+  '/': typeof ProtectedIndexRoute
+  '/editor/$id': typeof ProtectedEditorIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
-  '/new': typeof NewRoute
   '/todos': typeof TodosRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/new': typeof ProtectedNewRoute
+  '/test': typeof ProtectedTestRoute
+  '/': typeof ProtectedIndexRoute
+  '/editor/$id': typeof ProtectedEditorIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
-  '/new': typeof NewRoute
   '/todos': typeof TodosRoute
-  '/editor/$id': typeof EditorIdRoute
+  '/_protected/new': typeof ProtectedNewRoute
+  '/_protected/test': typeof ProtectedTestRoute
+  '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/editor/$id': typeof ProtectedEditorIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/login' | '/new' | '/todos' | '/editor/$id'
+  fullPaths: '/login' | '/todos' | '/new' | '/test' | '/' | '/editor/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/login' | '/new' | '/todos' | '/editor/$id'
+  to: '/login' | '/todos' | '/new' | '/test' | '/' | '/editor/$id'
   id:
     | '__root__'
-    | '/'
-    | '/dashboard'
+    | '/_protected'
     | '/login'
-    | '/new'
     | '/todos'
-    | '/editor/$id'
+    | '/_protected/new'
+    | '/_protected/test'
+    | '/_protected/'
+    | '/_protected/editor/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
   LoginRoute: typeof LoginRoute
-  NewRoute: typeof NewRoute
   TodosRoute: typeof TodosRoute
-  EditorIdRoute: typeof EditorIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -105,13 +109,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TodosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/new': {
-      id: '/new'
-      path: '/new'
-      fullPath: '/new'
-      preLoaderRoute: typeof NewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -119,37 +116,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_protected/': {
+      id: '/_protected/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtectedIndexRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/editor/$id': {
-      id: '/editor/$id'
+    '/_protected/test': {
+      id: '/_protected/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof ProtectedTestRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/new': {
+      id: '/_protected/new'
+      path: '/new'
+      fullPath: '/new'
+      preLoaderRoute: typeof ProtectedNewRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/editor/$id': {
+      id: '/_protected/editor/$id'
       path: '/editor/$id'
       fullPath: '/editor/$id'
-      preLoaderRoute: typeof EditorIdRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof ProtectedEditorIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
 
+interface ProtectedRouteChildren {
+  ProtectedNewRoute: typeof ProtectedNewRoute
+  ProtectedTestRoute: typeof ProtectedTestRoute
+  ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedEditorIdRoute: typeof ProtectedEditorIdRoute
+}
+
+const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedNewRoute: ProtectedNewRoute,
+  ProtectedTestRoute: ProtectedTestRoute,
+  ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedEditorIdRoute: ProtectedEditorIdRoute,
+}
+
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  ProtectedRoute: ProtectedRouteWithChildren,
   LoginRoute: LoginRoute,
-  NewRoute: NewRoute,
   TodosRoute: TodosRoute,
-  EditorIdRoute: EditorIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

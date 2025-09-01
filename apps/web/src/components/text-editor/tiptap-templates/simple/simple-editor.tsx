@@ -70,8 +70,9 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils";
 
 // --- Styles ---
 import "@/components/text-editor/tiptap-templates/simple/simple-editor.scss";
+import type { DocumentContentInterface } from "@andika/shared";
 
-import content from "@/components/text-editor/tiptap-templates/simple/data/content.json";
+// import content from "@/components/text-editor/tiptap-templates/simple/data/content.json";
 
 const MainToolbarContent = ({
   onHighlighterClick,
@@ -138,7 +139,7 @@ const MainToolbarContent = ({
       <ToolbarSeparator />
 
       <ToolbarGroup>
-        <ImageUploadButton text="Add" />
+        <ImageUploadButton text="Add Image" />
       </ToolbarGroup>
 
       <Spacer />
@@ -181,7 +182,11 @@ const MobileToolbarContent = ({
   </>
 );
 
-export function SimpleEditor() {
+export function SimpleEditor({
+  content,
+}: {
+  content: DocumentContentInterface;
+}) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = React.useState<

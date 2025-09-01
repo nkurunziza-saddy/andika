@@ -2,7 +2,6 @@ import {
   pgTable,
   text,
   timestamp,
-  json,
   boolean,
   index,
   type AnyPgColumn,
@@ -29,7 +28,7 @@ export const commentsTable = pgTable(
       .notNull()
       .references(() => usersTable.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
-    position: jsonb("position"), // Store cursor position/text selection
+    position: jsonb("position"),
     parentCommentId: text("parent_comment_id").references(
       (): AnyPgColumn => commentsTable.id,
       { onDelete: "cascade" }

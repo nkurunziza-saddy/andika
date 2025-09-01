@@ -17,6 +17,9 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "server": "workspace:*"
+  },
   "devDependencies": {
     "@andika/typescript-config": "workspace:*",
     "typescript": "^5.8.3"
