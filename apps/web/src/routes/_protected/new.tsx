@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChapterSidebar } from "@/components/chapter-sidebar";
 import { VersionHistory } from "@/components/version-history";
@@ -12,9 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ApiSelectTypes } from "@andika/shared";
+import type { ApiSelectTypes, DocumentContentInterface } from "@andika/shared";
 import { RenameDialog } from "@/components/action-dialogs/rename-dialog";
 import { DeleteDialog } from "@/components/action-dialogs/delete-dialog";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { trpc } from "@/utils/trpc";
 
 type NewSearchParams = {
   type: string;
@@ -41,7 +43,10 @@ function RouteComponent() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const showChapters = type === "document" || type === "";
-
+  const [documentId, setDocumentId] = useState<string | null>(null);
+  const [editorContent, setEditorContent] =
+    useState<DocumentContentInterface>("");
+  console.log({ editorContent });
   const handleRenameClick = () => {
     setIsDropdownOpen(false);
     setIsRenameDialogOpen(true);
@@ -49,6 +54,58 @@ function RouteComponent() {
   const handleDeleteClick = () => {
     setIsDropdownOpen(false);
     setIsDeleteDialogOpen(true);
+  };
+
+  const documentQuery = useQuery({
+    ...trpc.documents.getById.queryOptions(documentId || ""),
+    enabled: !!documentId,
+  });
+
+  useEffect(() => {
+    if (documentQuery.data?.[0]?.content) {
+      setEditorContent(documentQuery.data[0].content);
+    }
+  }, [documentQuery.data]);
+
+  const createMutation = useMutation({
+    ...trpc.documents.create.mutationOptions(),
+    onSuccess: (data) => {
+      setDocumentId(data.document.id);
+      window.history.replaceState(null, "", `/editor/${data.document.id}`);
+    },
+  });
+
+  const updateMutation = useMutation({
+    ...trpc.documents.update.mutationOptions(),
+    onSuccess: () => {
+      documentQuery.refetch();
+    },
+  });
+
+  const handleSaveDocument = () => {
+    if (documentId) {
+      updateMutation.mutate({
+        id: documentId,
+        title: title || "Untitled Document",
+        content: editorContent,
+        chapterId: currentChapter?.id,
+        commitMessage: "Manual save",
+        versionType: "MANUAL_COMMIT",
+      });
+    } else {
+      createMutation.mutate({
+        title: title || "Untitled Document",
+        content: editorContent,
+        chapters: showChapters
+          ? [
+              {
+                title: "Chapter 1",
+                content: editorContent,
+              },
+            ]
+          : [],
+      });
+    }
   };
 
   return (
@@ -78,8 +135,17 @@ function RouteComponent() {
                 )}
 
                 <div className="w-fit flex items-center ml-auto">
-                  <Button variant="ghost" size="xs" onClick={() => {}}>
-                    Save
+                  <Button
+                    variant="ghost"
+                    size="xs"
+                    onClick={handleSaveDocument}
+                    disabled={
+                      createMutation.isPending || updateMutation.isPending
+                    }
+                  >
+                    {createMutation.isPending || updateMutation.isPending
+                      ? "Saving..."
+                      : "Save"}
                   </Button>
                   <Button
                     variant="ghost"
@@ -135,30 +201,8 @@ function RouteComponent() {
 
           <div className="h-[calc(100vh-8rem)] overflow-auto">
             <SimpleEditor
-              content={{
-                type: "doc",
-                content: [
-                  {
-                    type: "paragraph",
-                    content: [
-                      {
-                        type: "text",
-                        marks: [
-                          {
-                            type: "italic",
-                          },
-                        ],
-                        text:
-                          type === "note"
-                            ? "New Note"
-                            : type === "template"
-                            ? "New Template"
-                            : "New Document",
-                      },
-                    ],
-                  },
-                ],
-              }}
+              content={editorContent}
+              onChange={(content) => setEditorContent(content)}
             />
           </div>
 

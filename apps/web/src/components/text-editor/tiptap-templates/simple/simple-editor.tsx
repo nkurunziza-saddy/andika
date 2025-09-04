@@ -184,8 +184,10 @@ const MobileToolbarContent = ({
 
 export function SimpleEditor({
   content,
+  onChange,
 }: {
   content: DocumentContentInterface;
+  onChange: (content: DocumentContentInterface) => void;
 }) {
   const isMobile = useIsMobile();
   const { height } = useWindowSize();
@@ -233,6 +235,9 @@ export function SimpleEditor({
       }),
     ],
     content,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getJSON());
+    },
   });
 
   const rect = useCursorVisibility({
